@@ -45,6 +45,7 @@ contract Crowdfunding {
     }
 
     constructor(
+        address _owner,
         string memory _name,
         string memory _description,
         uint256 _goal,
@@ -54,7 +55,7 @@ contract Crowdfunding {
         description = _description;
         goal = _goal;
         deadline = block.timestamp + (_durationInDays * 1 days);
-        owner = msg.sender;
+        owner = _owner;
         state = CampaignState.Active;
     }
     
@@ -106,7 +107,7 @@ contract Crowdfunding {
 
     function refund() public {
         checkAndUpdateCampaignState();
-        // require(state == CampaignState.Failed, "Refunds not available.");
+        require(state == CampaignState.Failed, "Refunds not available.");
 
         uint256 amount = backers[msg.sender].totalContribution;
         require(amount > 0, "No contribution to refund.");
